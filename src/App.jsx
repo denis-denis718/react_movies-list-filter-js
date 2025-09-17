@@ -3,21 +3,18 @@ import { useState } from 'react';
 import { MoviesList } from './components/MoviesList';
 import moviesFromServer from './api/movies.json';
 
-
-
 export const App = () => {
-
   const [query, setQuery] = useState('');
-
+  
+  const normalizedQuery = query.trim().toLowerCase();
   const visibleMovies = moviesFromServer.filter(movie => {
-    const normalizedQuery = query.trim().toLowerCase();
-
+    const description = (movie.description ?? '').toLowerCase();
+    
     return (
       movie.title.toLowerCase().includes(normalizedQuery) ||
-      movie.description.toLowerCase().includes(normalizedQuery)
-    )
-  }
-  )
+      description.includes(normalizedQuery)
+    );
+  });
 
   return (
     <div className="page">
@@ -45,20 +42,18 @@ export const App = () => {
                 className="input"
                 placeholder="Type search word"
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.currentTarget.value)
+                onChange={event => {
+                  setQuery(event.currentTarget.value);
                 }}
               />
             </div>
           </div>
         </div>
 
-        <MoviesList
-          movies={visibleMovies}
-        />
+        <MoviesList movies={visibleMovies} />
       </div>
 
       <div className="sidebar">Sidebar goes here</div>
     </div>
-  )
+  );
 };
